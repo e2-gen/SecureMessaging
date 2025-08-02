@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messaging-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: messaging
+  template:
+    metadata:
+      labels:
+        app: messaging
+    spec:
+      containers:
+      - name: messaging
+        image: secure-messenger:latest
+        ports:
+        - containerPort: 9000
+        env:
+        - name: DB_HOST
+          value: "mysql-cluster"
+        - name: REDIS_HOST
+          value: "redis-master"
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: "500m"
+            memory: 512Mi
