@@ -1,0 +1,40 @@
+name: Generate Repository Tree
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  generate-tree:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Generate directory tree
+      run: |
+        # تثبيت أداة tree إذا لم تكن موجودة
+        if ! command -v tree &> /dev/null; then
+          sudo apt-get update
+          sudo apt-get install -y tree
+        fi
+        
+        # إنشاء ملف tree.txt مع هيكل المستودع
+        tree -a -I '.git' --dirsfirst -o tree.txt
+        
+        # إضافة محتوى الملفات إلى tree.txt
+        echo -e "\n\n### File Contents ###\n" >> tree.txt
+        
+        # البحث عن جميع الملفات وإضافة محتواها
+        find . -type f -not -path './.git/*' -exec sh -c '
+          echo -e "\n\n==> {} <==\n" >> tree.txt
+          cat {} >> tree.txt
+        ' \;
+        
+    - name: Upload tree.txt as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: repository-tree
+        path: tree.txt
