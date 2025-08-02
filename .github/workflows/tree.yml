@@ -27,14 +27,14 @@ jobs:
         # إضافة محتوى الملفات إلى tree.txt
         echo -e "\n\n### File Contents ###\n" >> tree.txt
         
-        # البحث عن جميع الملفات وإضافة محتواها
-        find . -type f -not -path './.git/*' -exec sh -c '
+        # البحث عن جميع الملفات وإضافة محتواها (مع استثناء ملف tree.txt نفسه)
+        find . -type f -not -path './.git/*' -not -path './tree.txt' -exec sh -c '
           echo -e "\n\n==> {} <==\n" >> tree.txt
           cat {} >> tree.txt
         ' \;
         
     - name: Upload tree.txt as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: repository-tree
         path: tree.txt
