@@ -1,0 +1,22 @@
+:root {
+  --primary-color: #1a365d;
+  --secondary-color: #2c5282;
+  --accent-color: #3182ce;
+  --background-dark: #1a202c;
+  --text-light: #e2e8f0;
+  --text-muted: #a0aec0;
+}
+
+body.dark-mode {
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+
+.dark-mode .message.sent {
+  background-color: var(--primary-color);
+}
+
+.dark-mode .message.received {
+  background-color: var(--secondary-color);
+  color: var(--text-light);
+}
